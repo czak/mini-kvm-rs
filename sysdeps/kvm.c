@@ -47,6 +47,7 @@ int main() {
     // param: struct kvm_sregs
     // ret  : 0 success, -1 error
     printf("pub(crate) const KVM_SET_SREGS : u64 = 0x%lx;\n", KVM_SET_SREGS);
+    printf("pub(crate) const KVM_SET_GUEST_DEBUG : u64 = 0x%lx;\n", KVM_SET_GUEST_DEBUG);
 
     /* struct kvm_run constants */
 
@@ -55,6 +56,11 @@ int main() {
     printf("pub(crate) const KVM_EXIT_IO_IN : u64 = 0x%x;\n", KVM_EXIT_IO_IN);
     printf("pub(crate) const KVM_EXIT_IO_OUT : u64 = 0x%x;\n", KVM_EXIT_IO_OUT);
     printf("pub(crate) const KVM_EXIT_MMIO : u64 = 0x%x;\n", KVM_EXIT_MMIO);
+    printf("pub(crate) const KVM_EXIT_DEBUG : u64 = 0x%x;\n", KVM_EXIT_DEBUG);
+
+    /* struct kvm_guest_debug constants */
+    printf("pub(crate) const KVM_GUESTDBG_ENABLE : u32 = 0x%x;\n", KVM_GUESTDBG_ENABLE);
+    printf("pub(crate) const KVM_GUESTDBG_SINGLESTEP : u32 = 0x%x;\n", KVM_GUESTDBG_SINGLESTEP);
 
     /* Capabilities */
 

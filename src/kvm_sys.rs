@@ -141,6 +141,13 @@ union kvm_run_union_s {
     padding: [u8; 2048],
 }
 
+#[repr(C)]
+pub(crate) struct kvm_guest_debug {
+    pub control: u32,
+    pub pad: u32,
+    pub padding: [u64; 8],
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

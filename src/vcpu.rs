@@ -18,6 +18,7 @@ pub enum KvmExit<'cpu> {
     IoOut(u16, &'cpu [u8]),
     MmioRead(u64, &'cpu mut [u8]),
     MmioWrite(u64, &'cpu [u8]),
+    Debug,
 }
 
 /// Wrapper for VCPU ioctls.
@@ -86,6 +87,20 @@ impl Vcpu {
         .map(|_| ())
     }
 
+    pub fn debug_enable(&self) -> io::Result<()> {
+        let debug = kvm_sys::kvm_guest_debug {
+            control: kvm_sys::KVM_GUESTDBG_ENABLE | kvm_sys::KVM_GUESTDBG_SINGLESTEP,
+            pad: 0,
+            padding: [0, 0, 0, 0, 0, 0, 0, 0],
+        };
+        ioctl(
+            &self.vcpu,
+            kvm_sys::KVM_SET_GUEST_DEBUG,
+            &debug as *const _ as u64,
+        )
+        .map(|_| ())
+    }
+
     /// Run the guest VCPU with the [`KVM_RUN`][kvm-run] ioctl until it exits with one of the exit
     /// reasons described in [`KvmExit`](crate::vcpu::KvmExit).
     ///
@@ -128,6 +143,7 @@ impl Vcpu {
                     _ => unreachable!(),
                 }
             }
+            kvm_sys::KVM_EXIT_DEBUG => Ok(KvmExit::Debug),
             r @ _ => {
                 todo!("KVM_EXIT_... (exit_reason={}) not implemented!", r)
             }
